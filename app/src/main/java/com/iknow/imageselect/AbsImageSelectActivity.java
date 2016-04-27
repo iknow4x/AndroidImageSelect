@@ -81,6 +81,7 @@ public abstract class AbsImageSelectActivity extends CoreActivity implements IIm
     this.mContext = this;
     setContentView(R.layout.abs_image_select_layout);
     images = MediaFileUtil.getAllImageFiles(ZApplication.getApplication());
+    //images = MediaFileUtil.getAllVideoFiles(ZApplication.getApplication());
     imageChoosePresenter = new ImageChoosePresenterCompl(this, this);
     initTitleView(gsTitleView = (TitleView) this.findViewById(R.id.titlebar));
     initBottomView(this.findViewById(R.id.bottomView));

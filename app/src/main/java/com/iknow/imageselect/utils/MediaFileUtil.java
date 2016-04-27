@@ -336,9 +336,8 @@ public class MediaFileUtil {
         MediaInfo mediaInfo;
         ArrayList<MediaInfo> videos = new ArrayList<>();
         ContentResolver contentResolver = mContext.getContentResolver();
-        String[] projection = new String[] { MediaStore.Video.Media.TITLE };
         try {
-            Cursor cursor = contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
+            Cursor cursor = contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null,
                     null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
             while (cursor.moveToNext()) {
                 mediaInfo = new MediaInfo();

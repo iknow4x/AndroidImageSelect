@@ -2,15 +2,16 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="wrap_content" xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
-    android:gravity="center_vertical" >
+    android:gravity="center_vertical">
 
   <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/album_cover"
       android:layout_width="85dip"
       android:layout_height="85dip"
       android:layout_margin="15dp"
+      fresco:placeholderImage="@color/colorAccent"
       android:layout_alignParentLeft="true"
       android:layout_centerVertical="true"/>
 

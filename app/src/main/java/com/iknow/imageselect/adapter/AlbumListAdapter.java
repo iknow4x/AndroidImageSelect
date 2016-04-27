@@ -13,6 +13,7 @@ import com.iknow.imageselect.R;
 import com.iknow.imageselect.model.AlbumInfo;
 import com.iknow.imageselect.model.MediaInfo;
 import com.iknow.imageselect.utils.ImageFilePathUtil;
+import java.io.File;
 import java.util.LinkedList;
 
 /**
@@ -62,6 +63,8 @@ public class AlbumListAdapter extends BaseAdapter{
     if(!TextUtils.isEmpty(imageInfo.thumbPath)){
       path = imageInfo.thumbPath;
     }
+
+    File mediaFile = new File(path);
     h.albumCover.setImageURI(Uri.parse(ImageFilePathUtil.getImgUrl(path)));
     h.albumName.setText(albumInfo.name);
     h.albumNumber.setText(""+albumInfo.images.size());

@@ -83,17 +83,6 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
       }
 
       simpleDraweeView.setImageURI(Uri.parse(ImageFilePathUtil.getImgUrl(path)));
-      //创建DraweeController
-      //DraweeController controller = Fresco.newDraweeControllerBuilder()
-      //    //重试之后要加载的图片URI地址
-      //    .setUri(ImageFilePathUtil.getImgUrl(path))
-      //    //设置点击重试是否开启
-      //    .setTapToRetryEnabled(true)
-      //    //设置旧的Controller
-      //    .setOldController(simpleDraweeView.getController())
-      //    //构建
-      //    .build();
-      //simpleDraweeView.setController(controller);
 
       if (hasCheckedImages.contains(images.get(position))) {
         view.setChecked(true);

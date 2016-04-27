@@ -44,7 +44,7 @@ public class ImageChoosePresenterCompl implements IImageChoosePresenter {
   public String takePhotos() {
     try {
       final Intent intent = new Intent();
-      final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/gsCtrip/";
+      final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/";
       final File f = new File(dir);
       if (!f.exists()) {
         f.mkdir();

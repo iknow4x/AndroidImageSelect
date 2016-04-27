@@ -53,7 +53,7 @@
       <ListView
           android:id="@+id/all_album_list"
           android:layout_width="match_parent"
-          android:layout_height="300dp"
+          android:layout_height="450dp"
           android:divider="#dddddd"
           android:dividerHeight="0.5dp"
           android:background="#FFFFFF"/>
@@ -65,10 +65,10 @@
   <RelativeLayout
       android:id="@+id/bottomView"
       android:layout_width="match_parent"
-      android:layout_height="45dp"
+      android:layout_height="50dp"
       android:layout_gravity="bottom"
       android:gravity="bottom"
-      android:background="#cccccc">
+      android:background="#666666">
     <TextView
         android:id="@+id/preview_btn"
         android:layout_width="wrap_content"
@@ -89,10 +89,10 @@
         android:layout_marginLeft="20dp"
         android:gravity="center|left"
         android:textSize="18dp"
-        android:textColor="#555555"
+        android:textColor="#ffffff"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="所有相片"/>
+        android:text="图片和视频"/>
 
   </RelativeLayout>
 </LinearLayout>
