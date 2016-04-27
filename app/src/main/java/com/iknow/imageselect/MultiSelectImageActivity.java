@@ -1,14 +1,15 @@
 package com.iknow.imageselect;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.iknow.imageselect.model.ImageInfo;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.iknow.imageselect.model.MediaInfo;
+import com.iknow.imageselect.utils.ImageFilePathUtil;
 import com.iknow.imageselect.widget.PicItemCheckedView;
 import com.iknow.imageselect.widget.TitleView;
 
@@ -27,15 +28,10 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
   // ===========================================================
   // Fields
   // ===========================================================
-  private View mCameraIv;
-  private TextView mNextStep;
+  private TextView mSendBtn,mPreviewBtn;
   // ===========================================================
   // Constructors
   // ===========================================================
-
-  public static void startActivityForResult(Activity context){
-    context.startActivityForResult(new Intent(context,MultiSelectImageActivity.class),MULTI_PIC_SELECT_REQUEST);
-  }
 
   // ===========================================================
   // Getter & Setter
@@ -47,13 +43,25 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
 
   @Override
   protected void initTitleView(TitleView titleView) {
+    mSendBtn = (TextView) titleView.getRBtnView();
+    mSendBtn.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View pView) {
+        imageChoosePresenter.doSendAction();
+      }
+    });
   }
 
   @Override protected void initBottomView(View bottomView) {
+    mPreviewBtn = (TextView) bottomView.findViewById(R.id.preview_btn);
+    mPreviewBtn.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View pView) {
+        imageChoosePresenter.doPreview(hasCheckedImages);
+      }
+    });
   }
 
   @Override
-  protected View doGetViewWork(int position,View convertView,ImageInfo imageInfo) {
+  protected View doGetViewWork(int position,View convertView,MediaInfo imageInfo) {
 
     if (convertView == null) {
       convertView = new PicItemCheckedView(this);
@@ -61,29 +69,31 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
 
     try {
       PicItemCheckedView view = ((PicItemCheckedView) convertView);
-      long picId = images.get(position).imgId;
+      long picId = images.get(position).fileId;
       if (picId < 0) {
         throw new RuntimeException("the pic id is not num");
       }
 
-      final ImageView iv = view.getImageView();
-      iv.setScaleType(ImageView.ScaleType.FIT_XY);
+      final SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.getImageView();
 
-      String path = imageInfo.imgPath;
+      String path = imageInfo.fileName;
 
       if (!TextUtils.isEmpty(imageInfo.thumbPath)) {
         path = imageInfo.thumbPath;
       }
 
-      //ImageLoader.displayImage(ImageFilePathUtil.getImgUrl(path), iv,
-      //    AsyncImageLoaderHelper.getCtripDisplayImageOptionWithOutDisc(),
-      //    new GSImageLoadingListener() {
-      //      @Override public void onLoadingComplete(String imageUri,
-      //          View view,Bitmap loadedImage) {
-      //        ImageView imageView = (ImageView) view;
-      //        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-      //      }
-      //    });
+      simpleDraweeView.setImageURI(Uri.parse(ImageFilePathUtil.getImgUrl(path)));
+      //创建DraweeController
+      //DraweeController controller = Fresco.newDraweeControllerBuilder()
+      //    //重试之后要加载的图片URI地址
+      //    .setUri(ImageFilePathUtil.getImgUrl(path))
+      //    //设置点击重试是否开启
+      //    .setTapToRetryEnabled(true)
+      //    //设置旧的Controller
+      //    .setOldController(simpleDraweeView.getController())
+      //    //构建
+      //    .build();
+      //simpleDraweeView.setController(controller);
 
       if (hasCheckedImages.contains(images.get(position))) {
         view.setChecked(true);
@@ -109,11 +119,11 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
       }
 
       if(hasCheckedImages.size() > 0 ) {
-        mNextStep.setTextAppearance(mContext,R.style.blue_text_18_style);
-        mNextStep.setEnabled(true);
+        mSendBtn.setTextAppearance(mContext,R.style.blue_text_18_style);
+        mSendBtn.setEnabled(true);
       }else {
-        mNextStep.setEnabled(false);
-        mNextStep.setTextAppearance(mContext,R.style.gray_text_18_style);
+        mSendBtn.setEnabled(false);
+        mSendBtn.setTextAppearance(mContext,R.style.gray_text_18_style);
       }
 
     }
@@ -122,7 +132,7 @@ public class MultiSelectImageActivity extends AbsImageSelectActivity {
   @Override protected void onCameraActivityResult(String path) {
     Bundle bd = new Bundle();
     hasCheckedImages.clear();
-    hasCheckedImages.add(ImageInfo.buildOneImage(path));
+    hasCheckedImages.add(MediaInfo.buildOneImage(path));
     bd.putSerializable("ImageData",hasCheckedImages);
     Intent intent = new Intent();
     intent.putExtras(bd);

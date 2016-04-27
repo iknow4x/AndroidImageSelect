@@ -10,7 +10,7 @@ import android.text.format.DateFormat;
 import android.widget.Toast;
 import com.iknow.imageselect.AbsImageSelectActivity;
 import com.iknow.imageselect.ZApplication;
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
 import com.iknow.imageselect.view.IImageChooseView;
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +67,11 @@ public class ImageChoosePresenterCompl implements IImageChoosePresenter {
     return mCameraImagePath;
   }
 
-  @Override public void doNextStep(ArrayList<ImageInfo> hasCheckedImages) {
+  @Override public void doSendAction() {
+
+  }
+
+  @Override public void doPreview(ArrayList<MediaInfo> hasCheckedImages) {
     Bundle bd = new Bundle();
     bd.putSerializable("ImageData",hasCheckedImages);
     Intent intent = new Intent();

@@ -10,6 +10,7 @@ import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.iknow.imageselect.R;
 import com.iknow.imageselect.utils.DeviceInforHelper;
 
@@ -17,10 +18,10 @@ public class PicItemCheckedView extends RelativeLayout implements Checkable {
 
     private Context mContext;
     private boolean mChecked;
-    private ImageView mImgView = null;
+    private SimpleDraweeView mImgView = null;
     private ImageView mSelectView;
 
-  private static final int columnNum = 4;
+  private static final int columnNum = 3;
 
     public PicItemCheckedView(Context context,boolean isHide) {
       this(context, null, 0,isHide);
@@ -38,7 +39,7 @@ public class PicItemCheckedView extends RelativeLayout implements Checkable {
         super(context, attrs, defStyle);
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.image_select_item, this);
-        mImgView = (ImageView) findViewById(R.id.img_view);
+        mImgView = (SimpleDraweeView) findViewById(R.id.img_view);
        
         int size = DeviceInforHelper.getScreenWidth()/ columnNum;
 		    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mImgView.getLayoutParams();

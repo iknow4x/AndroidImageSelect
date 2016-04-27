@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +18,10 @@ import android.widget.Toast;
 import com.iknow.imageselect.adapter.AlbumListAdapter;
 import com.iknow.imageselect.core.CoreActivity;
 import com.iknow.imageselect.model.AlbumInfo;
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
 import com.iknow.imageselect.presenter.IImageChoosePresenter;
 import com.iknow.imageselect.presenter.ImageChoosePresenterCompl;
-import com.iknow.imageselect.utils.GalleryUtil;
+import com.iknow.imageselect.utils.MediaFileUtil;
 import com.iknow.imageselect.view.IImageChooseView;
 import com.iknow.imageselect.widget.TitleView;
 import java.io.File;
@@ -45,22 +45,22 @@ public abstract class AbsImageSelectActivity extends CoreActivity implements IIm
   // ===========================================================
   // Fields
   // ===========================================================
-  protected FragmentActivity mContext;
+  protected AppCompatActivity mContext;
   protected String mTakeCameraImagePath;
   private boolean showAlbumList = false;
   private ListView albumListView;
   private View albumView;
   protected TextView allImagesTv;
   protected TitleView gsTitleView;
-  protected ArrayList<ImageInfo> images = new ArrayList<ImageInfo>();
-  protected ArrayList<ImageInfo> hasCheckedImages = new ArrayList<ImageInfo>();
+  protected ArrayList<MediaInfo> images = new ArrayList<MediaInfo>();
+  protected ArrayList<MediaInfo> hasCheckedImages = new ArrayList<MediaInfo>();
   protected IImageChoosePresenter imageChoosePresenter;
   private ImageGridAdapter imageGridAdapter;
   private GridView mImageGv;
 
   protected abstract void initTitleView(TitleView titleView);
   protected abstract void initBottomView(View bottomView);
-  protected abstract View doGetViewWork(int position,View convertView,ImageInfo imageInfo);
+  protected abstract View doGetViewWork(int position,View convertView,MediaInfo imageInfo);
   protected abstract void onImageSelectItemClick(AdapterView<?> parent, View view, int position, long id);
   protected abstract void onCameraActivityResult(String path);
 ;
@@ -80,7 +80,7 @@ public abstract class AbsImageSelectActivity extends CoreActivity implements IIm
     super.onCreate(savedInstanceState);
     this.mContext = this;
     setContentView(R.layout.abs_image_select_layout);
-    images = GalleryUtil.getCameraPics(ZApplication.getApplication());
+    images = MediaFileUtil.getAllImageFiles(ZApplication.getApplication());
     imageChoosePresenter = new ImageChoosePresenterCompl(this, this);
     initTitleView(gsTitleView = (TitleView) this.findViewById(R.id.titlebar));
     initBottomView(this.findViewById(R.id.bottomView));
@@ -123,7 +123,7 @@ public abstract class AbsImageSelectActivity extends CoreActivity implements IIm
     if(R.id.all_album_tv == view.getId()) {
       if(!showAlbumList) {
         showAlbumListView();
-        albumListView.setAdapter(new AlbumListAdapter(this, GalleryUtil.getThumbnailsPhotosInfo(this)));
+        albumListView.setAdapter(new AlbumListAdapter(this, MediaFileUtil.getThumbnailsPhotosInfo(this)));
       }else{
         hideAlbumListView();
       }
@@ -157,8 +157,8 @@ public abstract class AbsImageSelectActivity extends CoreActivity implements IIm
             mImageGv.setSelection(0);
           }
         });
-        allImagesTv.setText(albumInfo.imgName);
-        gsTitleView.setTitleText(albumInfo.imgName);
+        allImagesTv.setText(albumInfo.name);
+        gsTitleView.setTitleText(albumInfo.name);
         hideAlbumListView();
       }
     });

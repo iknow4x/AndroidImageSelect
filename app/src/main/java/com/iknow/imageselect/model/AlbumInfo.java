@@ -9,6 +9,6 @@ import java.util.ArrayList;
  * @Description:相册专辑类
  */
 
-public class AlbumInfo extends ImageInfo {
-    public ArrayList<ImageInfo> images;
+public class AlbumInfo extends MediaInfo {
+    public ArrayList<MediaInfo> images;
 }

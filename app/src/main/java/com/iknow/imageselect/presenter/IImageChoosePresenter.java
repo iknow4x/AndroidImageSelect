@@ -1,6 +1,6 @@
 package com.iknow.imageselect.presenter;
 
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +13,6 @@ import java.util.ArrayList;
 public interface IImageChoosePresenter {
   void doCancel();
   String takePhotos();
-  void doNextStep(ArrayList<ImageInfo> hasCheckedImages);
-  //void onCameraActivityResult();
+  void doSendAction();
+  void doPreview(ArrayList<MediaInfo> hasCheckedImages);
 }

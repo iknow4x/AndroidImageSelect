@@ -17,9 +17,11 @@
           android:id="@+id/titlebar"
           android:layout_width="match_parent"
           android:layout_height="50dp"
-          android:background="@android:color/white"
-          app:title_text_appearance="@style/text_20_444444"
-          app:title_btn_left_text="取消"
+          android:background="@color/colorPrimaryDark"
+          app:title_text_appearance="@style/text_20_ffffff"
+          app:title_btn_left_drawable="@drawable/icon_back"
+          app:title_btn_right_text="发送"
+          app:title_btn_right_text_appearance="@style/text_16_ffffff"
           app:title_text="全部"/>
       <GridView
           android:id="@+id/album_pic_gridView"
@@ -30,9 +32,9 @@
           android:horizontalSpacing="2dip"
           android:listSelector="@android:color/transparent"
           android:numColumns="3"
-          android:padding="5dip"
+          android:padding="2dip"
           android:stretchMode="columnWidth"
-          android:verticalSpacing="5dip"/>
+          android:verticalSpacing="2dip"/>
     </LinearLayout>
 
     <LinearLayout
@@ -63,29 +65,30 @@
   <RelativeLayout
       android:id="@+id/bottomView"
       android:layout_width="match_parent"
-      android:layout_height="60dp"
+      android:layout_height="45dp"
       android:layout_gravity="bottom"
       android:gravity="bottom"
-      android:background="@android:color/transparent">
+      android:background="#cccccc">
     <TextView
-        android:id="@+id/next_step"
+        android:id="@+id/preview_btn"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="确定"/>
+        android:layout_alignParentRight="true"
+        android:textSize="18dp"
+        android:text="预览"/>
 
     <TextView
         android:id="@+id/all_album_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/next_step"
+        android:layout_toLeftOf="@+id/preview_btn"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
         android:gravity="center|left"
-        android:textSize="16dp"
+        android:textSize="18dp"
         android:textColor="#555555"
         android:ellipsize="end"
         android:singleLine="true"

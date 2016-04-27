@@ -9,23 +9,23 @@ import java.io.Serializable;
  * @Description:
  */
 
-public class ImageInfo implements Serializable {
+public class MediaInfo implements Serializable {
 
-  public long imgId;
+  public long fileId;
   /** 图片显示的名称 */
-  public String imgName = "";
+  public String name = "";
   /** 作者名称 */
-  public String nickName = "";
+  public String author = "";
   /** 图片描述信息 */
   public String description = "";
 
-  public String imgFolderPath;//图片所在文件夹的路径
+  public String filePath;//图片所在文件夹的路径
 
   public String createTime;
 
   public String thumbPath;//缩略图路径
 
-  public String imgPath;//图片全路径,包含图片文件名的路径信息
+  public String fileName;//图片全路径,包含图片文件名的路径信息
 
   public int rotate;
 
@@ -33,13 +33,13 @@ public class ImageInfo implements Serializable {
 
   public String lon;
 
-  public static ImageInfo obtain(String path){
-     ImageInfo imageInfo = new ImageInfo();
-     imageInfo.imgPath = path;
+  public static MediaInfo obtain(String path){
+     MediaInfo imageInfo = new MediaInfo();
+     imageInfo.fileName = path;
     return imageInfo;
   }
 
-  public static ImageInfo buildOneImage(String path){
+  public static MediaInfo buildOneImage(String path){
 
     return null;
   }

@@ -1,16 +1,18 @@
 package com.iknow.imageselect.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.iknow.imageselect.R;
 import com.iknow.imageselect.model.AlbumInfo;
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
+import com.iknow.imageselect.utils.ImageFilePathUtil;
 import java.util.LinkedList;
 
 /**
@@ -47,7 +49,7 @@ public class AlbumListAdapter extends BaseAdapter{
     if(null == convertView){
       convertView = LayoutInflater.from(context).inflate(R.layout.ablum_list_view_item, null);
       h = new ViewHolder();
-      h.albumCover = (ImageView) convertView.findViewById(R.id.album_cover);
+      h.albumCover = (SimpleDraweeView) convertView.findViewById(R.id.album_cover);
       h.albumName = (TextView) convertView.findViewById(R.id.album_name);
       h.albumNumber = (TextView) convertView.findViewById(R.id.album_count);
       convertView.setTag(h);
@@ -55,29 +57,20 @@ public class AlbumListAdapter extends BaseAdapter{
       h = (ViewHolder) convertView.getTag();
     }
 
-    ImageInfo imageInfo = albumInfo.images.get(0);
-    String path = imageInfo.imgPath;
+    MediaInfo imageInfo = albumInfo.images.get(0);
+    String path = imageInfo.fileName;
     if(!TextUtils.isEmpty(imageInfo.thumbPath)){
       path = imageInfo.thumbPath;
     }
-
-    //ImageLoaderHelper.displayImage("file:///" + path, h.albumCover,
-    //    AsyncImageLoaderHelper.getCtripDisplayImageOptionWithOutDisc(),
-    //    new GSImageLoadingListener() {
-    //      @Override public void onLoadingComplete(String imageUri,
-    //          View view,Bitmap loadedImage) {
-    //        ImageView imageView = (ImageView) view;
-    //        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-    //      }
-    //    });
-    h.albumName.setText(albumInfo.imgName);
+    h.albumCover.setImageURI(Uri.parse(ImageFilePathUtil.getImgUrl(path)));
+    h.albumName.setText(albumInfo.name);
     h.albumNumber.setText(""+albumInfo.images.size());
 
     return convertView;
   }
 
   static class ViewHolder{
-    ImageView albumCover;
+    SimpleDraweeView albumCover;
     TextView albumName,albumNumber;
   }
 }

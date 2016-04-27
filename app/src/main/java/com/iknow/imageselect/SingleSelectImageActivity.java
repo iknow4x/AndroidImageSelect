@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
 import com.iknow.imageselect.widget.PicItemCheckedView;
 import com.iknow.imageselect.widget.TitleView;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class SingleSelectImageActivity extends AbsImageSelectActivity {
   // ===========================================================
   private ArrayList<PicItemCheckedView> hasCheckedView = new ArrayList<>();
   private View mCameraIv;
-  private TextView mNextStep;
+  private TextView mPreviewBtn;
   // ===========================================================
   // Constructors
   // ===========================================================
@@ -62,26 +62,26 @@ public class SingleSelectImageActivity extends AbsImageSelectActivity {
   }
 
   @Override protected void initBottomView(View bottomView) {
-    mNextStep = (TextView) bottomView.findViewById(R.id.next_step);
-    mNextStep.setTextAppearance(mContext,R.style.gray_text_18_style);
-    mNextStep.setEnabled(false);
-    mNextStep.setOnClickListener(new View.OnClickListener() {
+    mPreviewBtn = (TextView) bottomView.findViewById(R.id.preview_btn);
+    mPreviewBtn.setTextAppearance(mContext,R.style.gray_text_18_style);
+    mPreviewBtn.setEnabled(false);
+    mPreviewBtn.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View pView) {
         Bundle bd = new Bundle();
-        imageChoosePresenter.doNextStep(hasCheckedImages);
+        imageChoosePresenter.doPreview(hasCheckedImages);
       }
     });
   }
 
   @Override
-  protected View doGetViewWork(int position,View convertView,ImageInfo imageInfo) {
+  protected View doGetViewWork(int position,View convertView,MediaInfo imageInfo) {
     if (convertView == null) {
       convertView = new PicItemCheckedView(this,true);
     }
 
     try {
       PicItemCheckedView view = ((PicItemCheckedView) convertView);
-      long picId = images.get(position).imgId;
+      long picId = images.get(position).fileId;
       if (picId < 0) {
         throw new RuntimeException("the pic id is not num");
       }
@@ -89,21 +89,11 @@ public class SingleSelectImageActivity extends AbsImageSelectActivity {
       final ImageView iv = view.getImageView();
       iv.setScaleType(ImageView.ScaleType.FIT_XY);
 
-      String path = imageInfo.imgPath;
+      String path = imageInfo.fileName;
 
       if (!TextUtils.isEmpty(imageInfo.thumbPath)) {
         path = imageInfo.thumbPath;
       }
-
-      //ImageLoader.displayImage(ImageFilePathUtil.getImgUrl(path), iv,
-      //    AsyncImageLoaderHelper.getCtripDisplayImageOptionWithOutDisc(),
-      //    new GSImageLoadingListener() {
-      //      @Override public void onLoadingComplete(String imageUri,
-      //          View view,Bitmap loadedImage) {
-      //        ImageView imageView = (ImageView) view;
-      //        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-      //      }
-      //    });
 
       if (hasCheckedImages.contains(images.get(position))) {
         view.setChecked(true);
@@ -135,11 +125,11 @@ public class SingleSelectImageActivity extends AbsImageSelectActivity {
       }
 
       if(hasCheckedImages.size() > 0 ) {
-        mNextStep.setTextAppearance(mContext,R.style.blue_text_18_style);
-        mNextStep.setEnabled(true);
+        mPreviewBtn.setTextAppearance(mContext,R.style.blue_text_18_style);
+        mPreviewBtn.setEnabled(true);
       }else {
-        mNextStep.setTextAppearance(mContext,R.style.gray_text_18_style);
-        mNextStep.setEnabled(false);
+        mPreviewBtn.setTextAppearance(mContext,R.style.gray_text_18_style);
+        mPreviewBtn.setEnabled(false);
       }
     }
   }
@@ -147,7 +137,7 @@ public class SingleSelectImageActivity extends AbsImageSelectActivity {
   @Override protected void onCameraActivityResult(String path) {
     Bundle bd = new Bundle();
     hasCheckedImages.clear();
-    hasCheckedImages.add(ImageInfo.buildOneImage(path));
+    hasCheckedImages.add(MediaInfo.buildOneImage(path));
     bd.putSerializable("ImageData",hasCheckedImages);
     Intent intent = new Intent();
     intent.putExtras(bd);

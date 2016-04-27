@@ -1,5 +1,6 @@
 package com.iknow.imageselect.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +10,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import com.iknow.imageselect.model.AlbumInfo;
-import com.iknow.imageselect.model.ImageInfo;
+import com.iknow.imageselect.model.MediaInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @Description:
  */
 
-public class GalleryUtil {
+public class MediaFileUtil {
     /**
      * 获取图库专辑封面相关图片
      * @param mContext
@@ -50,29 +51,29 @@ public class GalleryUtil {
 
         AlbumInfo albumInfo = null;
 
-        HashMap<String, LinkedList<ImageInfo>> albums = getAlbumsInfo(mContext, cursor);
+        HashMap<String, LinkedList<MediaInfo>> albums = getAlbumsInfo(mContext, cursor);
         cursor.close();
 
         String key = null;
         for (Iterator<?> it = albums.entrySet().iterator(); it.hasNext();) {
             Map.Entry e = (Map.Entry) it.next();
-            LinkedList<ImageInfo> album = (LinkedList<ImageInfo>) e.getValue();
+            LinkedList<MediaInfo> album = (LinkedList<MediaInfo>) e.getValue();
 
             if (album != null && album.size() > 0) {
               albumInfo = new AlbumInfo();
               key = (String) e.getKey();
-              albumInfo.imgName = key.substring(key.lastIndexOf("/") + 1);
+              albumInfo.name = key.substring(key.lastIndexOf("/") + 1);
 
-              albumInfo.imgId = album.get(0).imgId;
-              albumInfo.imgFolderPath = album.get(0).imgFolderPath;
-              ArrayList<ImageInfo> list = new ArrayList<ImageInfo>();
+              albumInfo.fileId = album.get(0).fileId;
+              albumInfo.filePath = album.get(0).filePath;
+              ArrayList<MediaInfo> list = new ArrayList<MediaInfo>();
               for (int i = album.size() - 1; i >= 0; i--) {
                   list.add(album.get(i));
               }
               albumInfo.images = list;
 
-              if (albumInfo.imgFolderPath.endsWith("DCIM/Camera")) {
-                albumInfo.imgName = "相册";
+              if (albumInfo.filePath.endsWith("DCIM/Camera")) {
+                albumInfo.name = "相册";
                   bitmaps.addFirst(albumInfo);
               } else {
                   bitmaps.addLast(albumInfo);
@@ -84,8 +85,8 @@ public class GalleryUtil {
         return bitmaps;
     }
 
-    public static HashMap<String, LinkedList<ImageInfo>> getAlbumsInfo(Context mContext,Cursor cursor) {
-        HashMap<String, LinkedList<ImageInfo>> albumsInfos = new HashMap<String, LinkedList<ImageInfo>>();
+    public static HashMap<String, LinkedList<MediaInfo>> getAlbumsInfo(Context mContext,Cursor cursor) {
+        HashMap<String, LinkedList<MediaInfo>> albumsInfos = new HashMap<String, LinkedList<MediaInfo>>();
         String _path = MediaStore.Images.Media.DATA;
         String _album = MediaStore.Images.Media.DEFAULT_SORT_ORDER;
         String _time = MediaStore.Images.Media.DATE_ADDED;
@@ -93,7 +94,7 @@ public class GalleryUtil {
 
         HashMap<Integer, String> thumbInfos = getThumbImgInfo(mContext);
 
-        ImageInfo imageInfo = null;
+        MediaInfo imageInfo = null;
         File file = null;
         if (cursor.moveToFirst()) {
             do {
@@ -111,12 +112,12 @@ public class GalleryUtil {
                 String subPath = path.substring(0, path.lastIndexOf("/"));
 
                 if (albumsInfos.containsKey(getAlbumKey(subPath, album))) {
-                    LinkedList<ImageInfo> albums = albumsInfos
+                    LinkedList<MediaInfo> albums = albumsInfos
                             .remove(getAlbumKey(subPath, album));
-                    imageInfo = new ImageInfo();
-                    imageInfo.imgId = _id;
-                    imageInfo.imgFolderPath = subPath;
-                    imageInfo.imgPath = path;
+                    imageInfo = new MediaInfo();
+                    imageInfo.fileId = _id;
+                    imageInfo.filePath = subPath;
+                    imageInfo.fileName = path;
                     imageInfo.createTime = time;
                     imageInfo.rotate = rotate;
                     if(thumbInfos.containsKey(_id)){
@@ -125,11 +126,11 @@ public class GalleryUtil {
                     albums.add(imageInfo);
                     albumsInfos.put(getAlbumKey(subPath, album), albums);
                 } else {
-                    LinkedList<ImageInfo> albums = new LinkedList<ImageInfo>();
-                    imageInfo = new ImageInfo();
-                    imageInfo.imgId = _id;
-                    imageInfo.imgFolderPath = subPath;
-                    imageInfo.imgPath = path;
+                    LinkedList<MediaInfo> albums = new LinkedList<MediaInfo>();
+                    imageInfo = new MediaInfo();
+                    imageInfo.fileId = _id;
+                    imageInfo.filePath = subPath;
+                    imageInfo.fileName = path;
                     imageInfo.createTime = time;
                     imageInfo.rotate = rotate;
                     if(thumbInfos.containsKey(_id)){
@@ -300,18 +301,18 @@ public class GalleryUtil {
      * 获取本机相册所有的图片
      * @param mContext
      */
-    public static ArrayList<ImageInfo> getCameraPics(Context mContext){
-        ImageInfo info;
-        ArrayList<ImageInfo> _images = new ArrayList<>();
+    public static ArrayList<MediaInfo> getAllImageFiles(Context mContext){
+        MediaInfo info;
+        ArrayList<MediaInfo> _images = new ArrayList<>();
         try {
             String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " desc";
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,null, null, null, sortOrder);
             while (cursor.moveToNext()) {
-                info = new ImageInfo();
-                info.imgPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                info.imgName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+                info = new MediaInfo();
+                info.fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                info.name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
                 info.createTime = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-                info.imgId = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
+                info.fileId = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                 info.lat = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.LATITUDE));
                 info.lon = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE));
                 if(!TextUtils.isEmpty(info.lat)){
@@ -329,5 +330,28 @@ public class GalleryUtil {
 
         return _images;
 
+    }
+
+    public static ArrayList<MediaInfo> getAllVideoFiles(Context mContext){
+        MediaInfo mediaInfo;
+        ArrayList<MediaInfo> videos = new ArrayList<>();
+        ContentResolver contentResolver = mContext.getContentResolver();
+        String[] projection = new String[] { MediaStore.Video.Media.TITLE };
+        try {
+            Cursor cursor = contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
+                    null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
+            while (cursor.moveToNext()) {
+                mediaInfo = new MediaInfo();
+                mediaInfo.fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                mediaInfo.createTime = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED));
+                mediaInfo.name = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
+                videos.add(mediaInfo);
+            }
+
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return videos;
     }
 }
